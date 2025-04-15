@@ -5,9 +5,12 @@ class NavTools extends Pages {
 
 //Site Navigational Selectors for Testing
     
+    //selectors for the "Health A-Z" filter
     letterSelect (letter) {
         return $(`a[data-metrics-link="${letter}"]`);
     }
+    
+    //selectors for the "Search Bar" testing
     get searchSelect () {
         return $('.vn-menu-btn.vn-search.vn-dt');
     }
@@ -17,48 +20,33 @@ class NavTools extends Pages {
     get searchSubmit () {
         return $('button[type="submit"]');
     }
-    get homeSelect() {
-        return $('a[href="https://www.webmd.com/"]')
+    
+    //selectors for checking the “Policies” links
+    selectPoliciesOptions(num) {
+        return $(`[data-metrics-link="${num}"]`);
     }
-    get findDoctor() {
-        return $('a[href="https://doctor.webmd.com/"]')
-    }
-    get symptomChecker() {
-        return $('a[href="https://symptoms.webmd.com"]')
-    }
-    get livingViewAll() {
-        return $('a[href="https://www.webmd.com/living-healthy"]')
-    }
+    
 
 
 //Functions to allow for Testing
 
+    //Functions for the "Health A-Z" filter
+    async openLetterFilter() {
+        return super.open('a-to-z-guides/health-topics');
+    }
+    async selectLetterFilter (letter) {
+         await this.letterSelect(letter).click()
+    }
 
-    async goHome() {
-        await browser.url('https://www.webmd.com/');
-    }
-    async symptonChecking() {
-        await this.symptomChecker.click()
-    }
-    async livHealthyViewAll() {
-        await this.livingViewAll.click()
-    }
-    async goFindDoctor() {
-        await this.findDoctor.click()
-    }
+    //Functions for the "Search Bar" tests
     async searchSelectAndInput (text) {
         await this.searchSelect.click()
         await this.searchBarSelect.setValue(text);
         await this.searchSubmit.click()
     }
-    async selectLetterFilter (letter) {
-        await this.letterSelect(letter).click()
-    }
 
-    async openLetterFilter() {
-        return super.open('a-to-z-guides/health-topics');
-    }
-    async 
+
+ 
 }
 
 

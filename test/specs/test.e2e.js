@@ -2,16 +2,16 @@ import { expect } from '@wdio/globals'
 import NavTools from '../pageobjects/webMD.tools'
 import webAssurance from '../pageobjects/webMD.assurance'
 
-describe('10 automated actions', () => {
-    it('should navigate around the site', async () => {
+describe('', () => {
+    it('Testing the "Health A-Z” search filter options', async () => {
 
-        await browser.url('https://www.webmd.com/');
-        await NavTools.symptonChecking()
-        await browser.back()
-        await NavTools.goFindDoctor()
-        await browser.back()
-        await NavTools.livHealthyViewAll()
-        await browser.back()
+        // await browser.url('https://www.webmd.com/');
+        // await NavTools.symptonChecking()
+        // await browser.back()
+        // await NavTools.goFindDoctor()
+        // await browser.back()
+        // await NavTools.livHealthyViewAll()
+        // await browser.back()
         await NavTools.openLetterFilter()
         await NavTools.selectLetterFilter('f')
         await NavTools.selectLetterFilter('d')
@@ -22,6 +22,18 @@ describe('10 automated actions', () => {
         await NavTools.open()
 
     })
+
+    it('Checking the "Policies" options', async () => {
+        const policiesLink = await $('=Policies');
+        const aboutLink = await $('=About');
+        const advertisersLink = await $('=For Advertisers');
+    
+        await aboutLink.click();
+    
+        await advertisersLink.click();
+       
+        await policiesLink.click();
+    });
 })    // await LoginPage.open()
 
         // await LoginPage.login('tomsmith', 'SuperSecretPassword!')
