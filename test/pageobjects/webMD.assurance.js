@@ -7,6 +7,10 @@ class webAssurance extends Pages {
     get detectTextInSearch () {
         return $('.listing-body')
     }
+
+    get detectLetterResults () {
+        return $$('ul[class="link-list"]')
+    }
     
 
     get detectTextinSpecies () {

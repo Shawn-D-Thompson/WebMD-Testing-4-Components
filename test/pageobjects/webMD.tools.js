@@ -1,7 +1,7 @@
 import { $ } from '@wdio/globals'
 import Pages from './webMD.page.js';
 
-class NavTools extends Pages {
+class navTools extends Pages {
 
 //Site Navigational Selectors for Testing
     
@@ -50,4 +50,4 @@ class NavTools extends Pages {
 }
 
 
-export default new NavTools();
+export default new navTools();
