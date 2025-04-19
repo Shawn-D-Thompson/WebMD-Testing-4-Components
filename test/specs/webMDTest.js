@@ -3,22 +3,28 @@ import webAssurance from '../pageobjects/webMD.assurance'
 import navTools from '../pageobjects/webMD.tools.js'
 
 describe('WebMD Health A-Z Filter', () => {
+
+    before(async () => {
+        await navTools.openLetterFilter();
+    }) 
+   
+
     for (let letter of 'bcdefghijklmnopqrstuvwxyza') {
         it(`should only show results that start with the letter ${letter}`, async () => {
-            await navTools.openLetterFilter();
+            
             await navTools.selectLetterFilter(letter);
 
             // Wait for the letter filter results to appear
             const results = await $$('ul.link-list li a');
-            await browser.waitUntil(async () => (await results.length) > 0, {
-                timeout: 5000,
-                timeoutMsg: 'expected results to appear after 5s',
+            await browser.waitUntil(() => results.length > 0, {
+                timeout: 3000,
+                timeoutMsg: 'expected results to appear after 3s',
             });
 
             for (let item of results) {
                 const text = await item.getText();
                 if (text.length > 0) {
-                    expect(text[0].toUpperCase()).toBe(letter);
+                    expect(text[0].toLowerCase()).toBe(letter);
                 }
             }
         });
