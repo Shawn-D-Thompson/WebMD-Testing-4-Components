@@ -15,6 +15,7 @@ describe('WebMD Health A-Z Filter', () => {
             await navTools.selectLetterFilter(letter);
 
             // Wait for the letter filter results to appear
+
             const results = await $$('ul.link-list li a');
             await browser.waitUntil(() => results.length > 0, {
                 timeout: 3000,
@@ -32,6 +33,25 @@ describe('WebMD Health A-Z Filter', () => {
 });
 
 
+describe('Positive/Negative Search Tests', () => {
+
+    it('Positive Search Attempt', async () => {
+        await navTools.open(); 
+
+        await navTools.searchSelectAndInput("Health");
+
+        // Wait for search results to appear
+        await webAssurance.searchTimeoutCheck()
+    })
+    it('Negative Search Attempt', async () => {
+
+        await navTools.open()
+        await navTools.searchSelectAndInput("aehoifhaewof");
+        const badResults = await $$('div.search-results-container');
+            expect(badResults.length).toBe(0);
+
+    });
+});
 
 
 
@@ -39,23 +59,6 @@ describe('WebMD Health A-Z Filter', () => {
 
 
 
-
-
-
-
-// describe('', () => {
-//     it('Testing the "Health A-Z” search filter options', async () => {
-//         await browser.url('https://www.webmd.com/');
-//         await navTools.openLetterFilter()
-//         await navTools.selectLetterFilter('f')
-//         await navTools.selectLetterFilter('d')
-//         await navTools.selectLetterFilter('x')
-//         await navTools.selectLetterFilter('g')
-//         await navTools.selectLetterFilter('w')
-//         await navTools.selectLetterFilter('a')
-//         await navTools.open()
-
-//     })
 
 //     it('Checking the "Policies" options', async () => {
 //         const policiesLink = await $('=Policies');
