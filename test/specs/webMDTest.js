@@ -15,6 +15,7 @@ describe('WebMD Health A-Z Filter', () => {
             await navTools.selectLetterFilter(letter);
 
             // Wait for the letter filter results to appear
+
             const results = await $$('ul.link-list li a');
             await browser.waitUntil(() => results.length > 0, {
                 timeout: 3000,
