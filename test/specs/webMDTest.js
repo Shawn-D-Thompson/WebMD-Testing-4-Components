@@ -34,38 +34,57 @@ describe('WebMD Health A-Z Filter', () => {
 
 
 
+describe('Positive/Negative Search Tests', () => {
+
+    it('Positive Search Attempt', async () => {
+        await navTools.open(); 
+
+        await navTools.searchSelectAndInput("Health");
+
+        // Wait for search results to appear
+        //await webAssurance.searchTimeoutCheck()
+
+    })
+    it('Negative Search Attempt', async () => {
+
+        await navTools.open()
+        await navTools.searchSelectAndInput("aehoifhaewof");
+        await webAssurance.checkSearchError() 
+
+    });
+});
+
+describe('Checking that the "Policies" links function properly', () => {
+
+    before(async () => {
+        await navTools.open()
+    });
+
+    // Defining policies to test
+    const policiesToTest = [
+        'Privacy Policy',
+        'Cookie Policy',
+        'Editorial Policy',
+        'Advertising Policy',
+        'Correction Policy',
+        'Terms of Use',
+        'Your Privacy Choices',
+    ];
+
+    // Looping Checks/Assertions for Policy Links
+    policiesToTest.forEach((policy) => {
+        it(`should navigate to ${policy} page`, async () => {
+            // Select the policy link (assumes navTools is defined)
+            await navTools.policySelection(policy);
+
+            // Optional: Validate navigation (e.g., check URL or page content)
+            const currentUrl = await browser.getUrl();
+            console.log(`Navigated to: ${currentUrl}`); // Debug log
+
+            await navTools.open();
+        });
+    });
+
+});
 
 
-
-
-
-
-
-
-
-// describe('', () => {
-//     it('Testing the "Health A-Z” search filter options', async () => {
-//         await browser.url('https://www.webmd.com/');
-//         await navTools.openLetterFilter()
-//         await navTools.selectLetterFilter('f')
-//         await navTools.selectLetterFilter('d')
-//         await navTools.selectLetterFilter('x')
-//         await navTools.selectLetterFilter('g')
-//         await navTools.selectLetterFilter('w')
-//         await navTools.selectLetterFilter('a')
-//         await navTools.open()
-
-//     })
-
-//     it('Checking the "Policies" options', async () => {
-//         const policiesLink = await $('=Policies');
-//         const aboutLink = await $('=About');
-//         const advertisersLink = await $('=For Advertisers');
-    
-//         await aboutLink.click();
-    
-//         await advertisersLink.click();
-       
-//         await policiesLink.click();
-//     });
-// })

@@ -22,10 +22,29 @@ class navTools extends Pages {
     }
     
     //selectors for checking the “Policies” links
-    selectPoliciesOptions(num) {
-        return $(`[data-metrics-link="${num}"]`);
+    policiesLinks (policy) {
+        return $(`=${policy}`)
     }
+        //Polocies include "Policies", "About", "For Advertisers", "Privacy Policy"
+            //"Cookie Policy", "Your Privacy Choices", "Editorial Policy", "Advertising Policy"
+            //"Correction Policy", "Terms of Use"
     
+    //selectors for the Pill Identifier Test
+    get colorSelect () {
+        return $('.color-section')
+    }
+    get shapeSelect () {
+        return $('.shape-section')
+    }
+    get textSelect () {
+        return $('.mobile-tool-tip')
+    }
+    get textSide2Select () {
+        return $('input[name="imprintSideTwo"]')
+    }
+    get pillSubmit () {
+        return $('.webmd-button webmd-button--primary webmd-button--medium')
+    }
 
 
 //Functions to allow for Testing
@@ -35,7 +54,7 @@ class navTools extends Pages {
         return super.open('a-to-z-guides/health-topics');
     }
     async selectLetterFilter (letter) {
-         await this.letterSelect(letter).click()
+         await this.letterSelect(letter).click();
     }
 
     //Functions for the "Search Bar" tests
@@ -45,6 +64,10 @@ class navTools extends Pages {
         await this.searchSubmit.click()
     }
 
+    //Functions for the "Policies" tests
+    async policySelection(policy) {
+        await this.policiesLinks(policy).click();
+    }
 
  
 }
