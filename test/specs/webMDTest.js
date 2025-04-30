@@ -8,31 +8,17 @@ describe('WebMD Health A-Z Filter', () => {
         await navTools.openLetterFilter();
     }) 
    
-
-    for (let letter of 'bcdefghijklmnopqrstuvwxyza') {
-        it(`should only show results that start with the letter ${letter}`, async () => {
-            
-            await navTools.selectLetterFilter(letter);
-
-            // Wait for the letter filter results to appear
-
-            const results = await $$('ul.link-list li a');
-            await browser.waitUntil(() => results.length > 0, {
-                timeout: 3000,
-                timeoutMsg: 'expected results to appear after 3s',
-            });
-
-            for (let item of results) {
-                const text = await item.getText();
-                if (text.length > 0) {
-                    expect(text[0].toLowerCase()).toBe(letter);
+        for (let letter of 'bcdefghijklmnopqrstuvwxyza') {
+            it(`should only show results that start with the letter ${letter}`, async () => {
+                await navTools.selectLetterFilter(letter);
+    
+                const allValid = await navTools.checkResultsStartWith(letter);
+                if (!allValid) {
+                    throw new Error(`Results did not start with the letter "${letter}"`);
                 }
-            }
         });
     }
 });
-
-
 
 
 describe('Positive/Negative Search Tests', () => {
@@ -43,7 +29,7 @@ describe('Positive/Negative Search Tests', () => {
         await navTools.searchSelectAndInput("Health");
 
         // Wait for search results to appear
-        //await webAssurance.searchTimeoutCheck()
+        await webAssurance.searchTimeoutCheck()
 
     })
     it('Negative Search Attempt', async () => {
@@ -75,12 +61,11 @@ describe('Checking that the "Policies" links function properly', () => {
     // Looping Checks/Assertions for Policy Links
     policiesToTest.forEach((policy) => {
         it(`should navigate to ${policy} page`, async () => {
-            // Select the policy link (assumes navTools is defined)
+            
             await navTools.policySelection(policy);
 
-            // Optional: Validate navigation (e.g., check URL or page content)
             const currentUrl = await browser.getUrl();
-            console.log(`Navigated to: ${currentUrl}`); // Debug log
+            console.log(`Navigated to: ${currentUrl}`);
 
             await navTools.open();
         });
@@ -89,3 +74,40 @@ describe('Checking that the "Policies" links function properly', () => {
 });
 
 
+describe('Testing the "Pill Identifier" filter options', () => {
+    it('should display results for each shape option', async () => {
+      const shapeOptions = [
+        '3 Sided',
+        '5 Sided',
+        '6 Sided',
+        '7 Sided',
+        '8 Sided',
+        'Oval',
+        'Round',
+        'Oblong',
+        'Square',
+        'Rectangle',
+        'Diamond',
+        'Other'
+      ];
+  
+      await navTools.openPillIdentifier();
+  
+      for (let shape of shapeOptions) {
+        await navTools.selectShape(); // Reopen dropdown each time
+  
+        await browser.waitUntil(async () => {
+          const options = await $$('div.webmd-scrollbar');
+          return options.length > 0;
+        })
+  
+        const option = await $(`//li[contains(., "${shape}")]`);
+        await option.waitForClickable({ timeout: 3000 });
+        await option.click();
+  
+        console.log(`Selected shape: ${shape}`);
+        await browser.pause(1000); // Optional for visual checking
+       }
+    })
+
+})

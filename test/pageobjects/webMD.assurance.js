@@ -33,10 +33,6 @@ class webAssurance extends Pages {
     }
     
 
-    get detectTextinSpecies () {
-        return $('.content-container')
-    }
-
     async letterTimoutCheck () {
         const results = await $$('ul.link-list li a');
         await browser.waitUntil(() => results.length > 0, {
