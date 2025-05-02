@@ -89,24 +89,41 @@ class navTools extends Pages {
     }
 
     //Functions for the "Pill Identifier" tests
-    async openPillIdentifier() {
-        return super.open('pill-identification/default.htm');
-    }
-    async selectColor () {
-        await this.colorSelect.click()
-    }
-    async selectShape () {
-        await this.shapeSelect.click()
-    }
-    async selectText1 () {
-        await this.textSelect.click()
-    }
-    async selectText2 () {
-        await this.textSide2Select.click()
-    }
-    async selectSubmit () {
-        await this.pillSubmit.click()
-    }
+
+        async openPillIdentifier() {
+            return super.open('pill-identification/default.htm');
+        }
+        async selectColor () {
+            await this.colorSelect.click()
+        }
+        async selectShape () {
+            await this.shapeSelect.click()
+        }
+        async selectText1 () {
+            await this.textSelect.click()
+        }
+        async selectText2 () {
+            await this.textSide2Select.click()
+        }
+        async selectSubmit () {
+            await this.pillSubmit.click()
+        }
+        async checkResults(pills) {
+            const results = await $$('div.search-results');
+            await browser.waitUntil(() => results.length > 0, {
+                timeout: 3000,
+                timeoutMsg: 'Expected results to appear after 3s',
+            });
+    
+            for (let item of results) {
+                const text = await item.getText();
+                if (text.length < 0) {
+                    return false;
+            }};
+    
+            return true;
+    
+        }
     
 }
 

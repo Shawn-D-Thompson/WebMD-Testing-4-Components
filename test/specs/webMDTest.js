@@ -1,4 +1,3 @@
-import { expect } from '@wdio/globals'
 import webAssurance from '../pageobjects/webMD.assurance'
 import navTools from '../pageobjects/webMD.tools.js'
 
@@ -97,17 +96,77 @@ describe('Testing the "Pill Identifier" filter options', () => {
         await navTools.selectShape(); // Reopen dropdown each time
   
         await browser.waitUntil(async () => {
-          const options = await $$('div.webmd-scrollbar');
-          return options.length > 0;
+          const dropDown = await $$('div.webmd-scrollbar');
+          return dropDown.length > 0;
         })
   
-        const option = await $(`//li[contains(., "${shape}")]`);
-        await option.waitForClickable({ timeout: 3000 });
-        await option.click();
+        const options = await $(`//li[contains(., "${shape}")]`);
+        await options.waitForClickable({ timeout: 3000 });
+        await options.click();
   
         console.log(`Selected shape: ${shape}`);
-        await browser.pause(1000); // Optional for visual checking
-       }
-    })
 
+        await navTools.selectSubmit()
+
+        await browser.waitUntil(async () => {
+            const searchResults = await $('div.search-results')
+            return await searchResults.isExisting();
+         });
+          const allValid = await navTools.checkResults(shape);
+          if (!allValid) {
+            throw new Error(`"${shape}" did not yield valid results`);
+          }
+        }
+    })
+    
+
+
+    it('should display results for each Color option', async () => {
+        const colorOptions = [
+          'White',
+          'Off-White',
+          'Clear',
+          'Gray',
+          'Black',
+          'Tan',
+          'Brown',
+          'Red',
+          'Multi-Color',
+          'Orange',
+          'Peach',
+          'Yellow',
+          'Gold',
+          'Green',
+          'Turquoise',
+          'Blue',
+          'Purple',
+          'Pink'
+        ];
+    
+        await navTools.openPillIdentifier();
+    
+        for (let color of colorOptions) {
+          await navTools.selectColor(); // Reopen dropdown each time
+    
+          await browser.waitUntil(async () => {
+            const dropDown = await $$('div.webmd-scrollbar');
+            return dropDown.length > 0;
+          })
+    
+          const options = await $(`//li[contains(., "${color}")]`);
+          await options.waitForClickable({ timeout: 3000 });
+          await options.click();
+    
+          console.log(`Selected Color: ${color}`);
+          
+          await browser.waitUntil(async () => {
+            const searchResults = await $('div.search-results')
+            return await searchResults.isExisting();
+         });
+          const allValid = await navTools.checkResults(color);
+          if (!allValid) {
+            throw new Error(`"${color}" did not yield valid results`);
+          }
+        }
+    })
 })
