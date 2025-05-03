@@ -58,7 +58,7 @@ exports.config = {
         browserName: 'chrome',
         'goog:chromeOptions': {
             args: ['--start-maximized'],
-        }
+        },
     }],
 
     //

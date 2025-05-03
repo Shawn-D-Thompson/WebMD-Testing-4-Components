@@ -23,7 +23,12 @@ describe('WebMD Health A-Z Filter', () => {
 describe('Positive/Negative Search Tests', () => {
 
     it('Positive Search Attempt', async () => {
-        await navTools.open(); 
+        
+      before(async () => {
+        await browser.reloadSession();
+        await navTools.main(); 
+      });
+        
 
         await navTools.searchSelectAndInput("Health");
 
@@ -33,7 +38,7 @@ describe('Positive/Negative Search Tests', () => {
     })
     it('Negative Search Attempt', async () => {
 
-        await navTools.open()
+        await navTools.main()
         await navTools.searchSelectAndInput("aehoifhaewof");
         await webAssurance.checkSearchError() 
 
@@ -43,7 +48,7 @@ describe('Positive/Negative Search Tests', () => {
 describe('Checking that the "Policies" links function properly', () => {
 
     before(async () => {
-        await navTools.open()
+        await navTools.main()
     });
 
     // Defining policies to test
@@ -58,17 +63,18 @@ describe('Checking that the "Policies" links function properly', () => {
     ];
 
     // Looping Checks/Assertions for Policy Links
-    policiesToTest.forEach((policy) => {
-        it(`should navigate to ${policy} page`, async () => {
-            
-            await navTools.policySelection(policy);
-
-            const currentUrl = await browser.getUrl();
-            console.log(`Navigated to: ${currentUrl}`);
-
-            await navTools.open();
-        });
-    });
+    for (const policy of policiesToTest) {
+      it(`should navigate to ${policy} page`, async () => {
+          
+          await navTools.policySelection(policy);
+  
+          const currentUrl = await browser.getUrl();
+          console.log(`Navigated to: ${currentUrl}`);
+  
+          await navTools.main();
+      });
+  }
+  
 
 });
 
@@ -89,6 +95,10 @@ describe('Testing the "Pill Identifier" filter options', () => {
         'Diamond',
         'Other'
       ];
+
+      before(async () => {
+        await browser.reloadSession(); 
+      });
   
       await navTools.openPillIdentifier();
   
@@ -101,7 +111,7 @@ describe('Testing the "Pill Identifier" filter options', () => {
         })
   
         const options = await $(`//li[contains(., "${shape}")]`);
-        await options.waitForClickable({ timeout: 3000 });
+        await options.waitForClickable({ timeout: 5000 });
         await options.click();
   
         console.log(`Selected shape: ${shape}`);
@@ -154,16 +164,18 @@ describe('Testing the "Pill Identifier" filter options', () => {
           })
     
           const options = await $(`//li[contains(., "${color}")]`);
-          await options.waitForClickable({ timeout: 3000 });
+          await options.waitForClickable({ timeout: 5000 });
           await options.click();
     
           console.log(`Selected Color: ${color}`);
+
+          await navTools.selectSubmit();
           
           await browser.waitUntil(async () => {
             const searchResults = await $('div.search-results')
             return await searchResults.isExisting();
          });
-          const allValid = await navTools.checkResults(color);
+          const allValid = await navTools.checkResults();
           if (!allValid) {
             throw new Error(`"${color}" did not yield valid results`);
           }

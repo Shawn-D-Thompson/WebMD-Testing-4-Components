@@ -45,7 +45,7 @@ class navTools extends Pages {
         return $('input[name="imprintSideTwo"]')
     }
     get pillSubmit () {
-        return $('.webmd-button webmd-button--primary webmd-button--medium')
+        return $("//button[contains(normalize-space(), 'Result')]");
     }
 
 
@@ -53,7 +53,7 @@ class navTools extends Pages {
 
     //Functions for the "Health A-Z" filter
     async openLetterFilter() {
-        return super.open('a-to-z-guides/health-topics');
+        return super.main('a-to-z-guides/health-topics');
     }
     async selectLetterFilter (letter) {
          await this.letterSelect(letter).click();
@@ -91,7 +91,7 @@ class navTools extends Pages {
     //Functions for the "Pill Identifier" tests
 
         async openPillIdentifier() {
-            return super.open('pill-identification/default.htm');
+            return super.main('pill-identification/default.htm');
         }
         async selectColor () {
             await this.colorSelect.click()
@@ -99,20 +99,28 @@ class navTools extends Pages {
         async selectShape () {
             await this.shapeSelect.click()
         }
-        async selectText1 () {
+        async selectText1 (text) {
             await this.textSelect.click()
+            await this.textSelect.setValue(text)
         }
-        async selectText2 () {
+        async selectText2 (text) {
             await this.textSide2Select.click()
+            await this.textSide2Select.setValue(text)
         }
         async selectSubmit () {
-            await this.pillSubmit.click()
+            const button = $("//button[contains(., 'Result')]");
+            await button.waitForDisplayed({ timeout: 5000 });
+            await button.waitForClickable({ timeout: 5000 });
+        
+            console.log('Clicking the Result button');
+            await button.click();
         }
-        async checkResults(pills) {
-            const results = await $$('div.search-results');
+        
+        async checkResults() {
+            const results = $('div.search-results');
             await browser.waitUntil(() => results.length > 0, {
-                timeout: 3000,
-                timeoutMsg: 'Expected results to appear after 3s',
+                timeout: 5000,
+                timeoutMsg: 'Expected results to appear after 5s',
             });
     
             for (let item of results) {
