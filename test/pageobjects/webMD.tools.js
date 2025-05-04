@@ -111,27 +111,19 @@ class navTools extends Pages {
             const button = $("//button[contains(., 'Result')]");
             await button.waitForDisplayed({ timeout: 5000 });
             await button.waitForClickable({ timeout: 5000 });
-        
-            console.log('Clicking the Result button');
             await button.click();
         }
         
         async checkResults() {
-            const results = $('div.search-results');
-            await browser.waitUntil(() => results.length > 0, {
-                timeout: 5000,
-                timeoutMsg: 'Expected results to appear after 5s',
-            });
-    
-            for (let item of results) {
-                const text = await item.getText();
-                if (text.length < 0) {
-                    return false;
-            }};
-    
-            return true;
-    
+            const resultHeader = $('div.search-results-header');
+            
+            await resultHeader.waitForExist({ timeout: 5000 });
+        
+            const text = await resultHeader.getText();
+            
+            return text.trim().length > 0;
         }
+        
     
 }
 
