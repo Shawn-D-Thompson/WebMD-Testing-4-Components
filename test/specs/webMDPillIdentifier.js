@@ -4,10 +4,6 @@ import navTools from '../pageobjects/webMD.tools.js'
 
 describe('Testing the "Pill Identifier" filter options', () => {
 
-    before(async () => {
-        await browser.reloadSession(); 
-    });
-
     //Shape Filter
     it('should display results for each shape', async () => {
         const shapeOptions = [
@@ -57,10 +53,6 @@ describe('Testing the "Pill Identifier" filter options', () => {
                 throw new Error(`"${shape}" did not yield valid results`);
             }}
     })
-
-    before(async () => {
-        await browser.reloadSession(); 
-    });
 
     //Color Filter
     it('should display results for each color', async () => {
@@ -116,26 +108,18 @@ describe('Testing the "Pill Identifier" filter options', () => {
         }
     })
 
-    before(async () => {
-        await browser.reloadSession(); 
-    });
 
     //Text Filter
-    it(`Should display results for ${text1}`, async () => {
+    // it(`Should display results for APO`, async () => {
 
-        const text1 = "APO"
-        const text2 = "ARI20"
+    //     await navTools.openPillIdentifier()
+    //     await navTools.enterPillText('APO')
+    //     await navTools.selectSubmit();
 
-        await navTools.selectText1(text1)
-        await browser.keys(['Enter'])
+    //     await browser.waitUntil(async () => {
+    //         const results = await $('div.search-results-container');
+    //         return await results.isDisplayed();
+    //     })
 
-        await navTools.selectSubmit();
-
-        await browser.waitUntil(async () => {
-            const results = await $('div.search-results-container');
-            return await results.isDisplayed();
-        })
-
-        //<div class="webmd-scrollbar">
-    })
+    // })
 })

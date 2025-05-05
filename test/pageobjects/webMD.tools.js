@@ -33,13 +33,13 @@ class navTools extends Pages {
     
     //selectors for the Pill Identifier Test
     get colorSelect () {
-        return $('.color-section')
+        return $('.color-section');
     }
     get shapeSelect () {
-        return $('.shape-section')
+        return $('.shape-section');
     }
     get textSelect () {
-        return $('.mobile-tool-tip')
+        return $('.imprint-search');
     }
     get textSide2Select () {
         return $('input[name="imprintSideTwo"]')
@@ -99,14 +99,6 @@ class navTools extends Pages {
         async selectShape () {
             await this.shapeSelect.click()
         }
-        async selectText1 (text) {
-            await this.textSelect.click()
-            await this.textSelect.setValue(text)
-        }
-        async selectText2 (text) {
-            await this.textSide2Select.click()
-            await this.textSide2Select.setValue(text)
-        }
         async selectSubmit () {
             const button = $("//button[contains(., 'Result')]");
             await button.waitForDisplayed({ timeout: 5000 });
@@ -123,6 +115,25 @@ class navTools extends Pages {
             
             return text.trim().length > 0;
         }
+
+        // async enterPillText(text1, text2 = '') {
+        //     await this.textSelect.waitForDisplayed({ timeout: 5000 });
+        //     await this.textSelect.waitForClickable({ timeout: 5000 });
+        //     await this.textSelect.click();
+        //     await this.textSelect.setValue(text1);
+        //     await this.textSide2Select.waitForDisplayed({ timeout: 5000 });
+        //     await this.textSide2Select.waitForClickable({ timeout: 5000 });
+        //     await this.textSide2Select.click();
+        //     await this.textSide2Select.setValue(text2);
+        //     await browser.keys('Enter');
+        //   }
+
+        async enterPillText(text) {
+            await this.textSelect.click();
+            await this.textSelect.setValue(text);
+            await browser.keys('Enter');
+          }
+          
         
     
 }

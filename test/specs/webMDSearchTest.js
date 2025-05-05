@@ -6,11 +6,7 @@ describe('Positive/Negative Search Tests', () => {
 
     it('Positive Search Attempt', async () => {
         
-      before(async () => {
-        await browser.reloadSession();
-        await navTools.main(); 
-      });
-        
+        await navTools.main()
 
         await navTools.searchSelectAndInput("Health");
 

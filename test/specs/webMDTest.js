@@ -86,6 +86,10 @@ describe('Checking that the "Policies" links function properly', () => {
 
 describe('Testing the "Pill Identifier" filter options', () => {
 
+    before(async () => {
+        await browser.reloadSession(); 
+    });
+
     //Shape Filter
     it('should display results for each shape', async () => {
         const shapeOptions = [
@@ -102,16 +106,11 @@ describe('Testing the "Pill Identifier" filter options', () => {
             'Diamond',
             'Other'
       ];
-
-    before(async () => {
-        await browser.reloadSession(); 
-    });
   
     await navTools.openPillIdentifier();
   
     for (let shape of shapeOptions) {
         await navTools.selectShape(); // Reopen dropdown each time
-  
         await browser.waitUntil(async () => {
             const dropDown = await $$('div.webmd-scrollbar');
             return dropDown.length > 0;
@@ -119,25 +118,31 @@ describe('Testing the "Pill Identifier" filter options', () => {
   
         const option = await $(`//li[contains(., "${shape}")]`);
         await option.waitForDisplayed({ timeout: 5000 });
-        await option.scrollIntoView();
         await option.waitForClickable({ timeout: 5000 });
         await option.click();
-    
   
-        console.log(`Selected shape: ${shape}`);
+        await browser.waitUntil(async () => await option.isDisplayed(), { timeout: 3000 });
 
+        await option.click();
+
+
+        console.log(`Selected shape: ${shape}`);
         await navTools.selectSubmit()
 
         await browser.waitUntil(async () => {
             const searchResults = await $('div.search-results-container')
             return await searchResults.isExisting();
          });
+
             const allValid = await navTools.checkResults(shape);
             if (!allValid) {
                 throw new Error(`"${shape}" did not yield valid results`);
             }}
     })
-    
+
+    before(async () => {
+        await browser.reloadSession(); 
+    });
 
     //Color Filter
     it('should display results for each color', async () => {
@@ -174,7 +179,6 @@ describe('Testing the "Pill Identifier" filter options', () => {
     
             const option = await $(`//li[contains(., "${color}")]`);
             await option.waitForDisplayed({ timeout: 5000 });
-            await option.scrollIntoView();
             await option.waitForClickable({ timeout: 5000 });
             await option.click();
 
@@ -194,4 +198,21 @@ describe('Testing the "Pill Identifier" filter options', () => {
         }
     })
 
+    before(async () => {
+        await browser.reloadSession(); 
+    });
+
+    //Text Filter
+    it(`Should display results for APO`, async () => {
+
+        await navTools.openPillIdentifier()
+        await navTools.enterPillText('APO', 'BU75')
+        await navTools.selectSubmit();
+
+        await browser.waitUntil(async () => {
+            const results = await $('div.search-results-container');
+            return await results.isDisplayed();
+        })
+
+    })
 })
