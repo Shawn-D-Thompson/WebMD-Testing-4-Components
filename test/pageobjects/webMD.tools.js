@@ -3,6 +3,22 @@ import Pages from './webMD.page.js';
 
 class navTools extends Pages {
 
+    async disableAnimations() {
+        await browser.execute(() => {
+            const css = `
+                * {
+                    transition: none !important;
+                    animation: none !important;
+                }
+            `;
+            const style = document.createElement('style');
+            style.innerHTML = css;
+            document.head.appendChild(style);
+        });
+    }
+    
+
+
 //Site Navigational Selectors for Testing
     
     //selectors for the "Health A-Z" filter
@@ -128,11 +144,42 @@ class navTools extends Pages {
         //     await browser.keys('Enter');
         //   }
 
+        // async enterPillText(text) {
+        //     await this.textSelect.click();
+        //     await browser.execute(el => el.value = '', input);
+        //     await this.textSelect.setValue(text);
+        //     await browser.keys('Enter');
+        //   }
+
         async enterPillText(text) {
-            await this.textSelect.click();
-            await this.textSelect.setValue(text);
+            const input = this.textSelect; // define the input element
+        
+            await input.waitForDisplayed({ timeout: 5000 });
+            await input.waitForEnabled({ timeout: 5000 });
+        
+            await input.click();
+            await browser.execute(el => el.value = '', input); // clear using JS
+            await input.setValue(text);
             await browser.keys('Enter');
-          }
+        }
+        
+
+        async selectDropdownOption(Text) {
+            const option = $(`//li[contains(., "${Text}")]`);
+            await option.waitForDisplayed({ timeout: 5000 });
+            await option.waitForClickable({ timeout: 5000 });
+            //await browser.waitUntil(async () => await option.isDisplayed(), { timeout: 5000 });
+            await option.click();
+
+            // const isVisible = await option.isDisplayed();
+            //     if (!isVisible) {
+            //         throw new Error(`Option "${Text}" is not visible`);
+            //     }
+
+            //     await option.click();
+            //     console.log(`Clicked on: ${Text}`);
+        }
+          
           
         
     

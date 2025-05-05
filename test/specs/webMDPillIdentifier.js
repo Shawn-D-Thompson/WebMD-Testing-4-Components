@@ -22,22 +22,14 @@ describe('Testing the "Pill Identifier" filter options', () => {
       ];
   
     await navTools.openPillIdentifier();
+    //await navTools.disableAnimations();
   
     for (let shape of shapeOptions) {
+        await navTools.openPillIdentifier()
         await navTools.selectShape(); // Reopen dropdown each time
-        await browser.waitUntil(async () => {
-            const dropDown = await $$('div.webmd-scrollbar');
-            return dropDown.length > 0;
-        })
-  
-        const option = await $(`//li[contains(., "${shape}")]`);
-        await option.waitForDisplayed({ timeout: 5000 });
-        await option.waitForClickable({ timeout: 5000 });
-        await option.click();
-  
-        await browser.waitUntil(async () => await option.isDisplayed(), { timeout: 3000 });
 
-        await option.click();
+        await navTools.selectDropdownOption(shape)
+
 
 
         console.log(`Selected shape: ${shape}`);
@@ -80,19 +72,11 @@ describe('Testing the "Pill Identifier" filter options', () => {
         await navTools.openPillIdentifier();
     
         for (let color of colorOptions) {
+            //await navTools.openPillIdentifier();
             await navTools.selectColor(); // Reopen dropdown each time
-    
-            await browser.waitUntil(async () => {
-                const dropDown = await $$('div.webmd-scrollbar');
-                return dropDown.length > 0;
-            })
-    
-            const option = await $(`//li[contains(., "${color}")]`);
-            await option.waitForDisplayed({ timeout: 5000 });
-            await option.waitForClickable({ timeout: 5000 });
-            await option.click();
 
-    
+            await navTools.selectDropdownOption(color)
+
             console.log(`Selected Color: ${color}`);
 
             await navTools.selectSubmit();
@@ -110,16 +94,16 @@ describe('Testing the "Pill Identifier" filter options', () => {
 
 
     //Text Filter
-    // it(`Should display results for APO`, async () => {
+    it(`Should display results for APO`, async () => {
 
-    //     await navTools.openPillIdentifier()
-    //     await navTools.enterPillText('APO')
-    //     await navTools.selectSubmit();
+        await navTools.openPillIdentifier()
+        await navTools.enterPillText('APO')
+        await navTools.selectSubmit();
 
-    //     await browser.waitUntil(async () => {
-    //         const results = await $('div.search-results-container');
-    //         return await results.isDisplayed();
-    //     })
+        await browser.waitUntil(async () => {
+            const results = await $('div.search-results-container');
+            return await results.isDisplayed();
+        })
 
-    // })
+    })
 })

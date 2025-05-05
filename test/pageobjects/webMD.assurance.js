@@ -13,25 +13,10 @@ class webAssurance extends Pages {
     }
 
 
-    async checkAndClosePopup() {
-        const popupSelector = '[data-testid="modal-close"]'; // ← Replace with actual close button selector
-    
-        const isPopupPresent = await $(popupSelector).isDisplayed().catch(() => false);
-    
-        if (isPopupPresent) {
-            console.log('🔔 Popup detected — closing it!');
-            await $(popupSelector).click();
-            await browser.pause(500); // Optional: allow time for popup to disappear
-        } else {
-            console.log('✅ No popup detected.');
-        }
-    }
-
-
+    //LetterFilter
     get detectLetterResults () {
         return $$('ul[class="link-list"]')
     }
-    
 
     async letterTimoutCheck () {
         const results = await $$('ul.link-list li a');
@@ -50,7 +35,7 @@ class webAssurance extends Pages {
 
     async searchTimeoutCheck () {
         await browser.waitUntil(async () => {
-            const results = await $$('div.search-results-container');
+            const results = await $$('div.search-results-internal-container');
             return results.length > 0;
         }, {
             timeout: 5000,

@@ -7,10 +7,7 @@ describe('Positive/Negative Search Tests', () => {
     it('Positive Search Attempt', async () => {
         
         await navTools.main()
-
         await navTools.searchSelectAndInput("Health");
-
-        // Wait for search results to appear
         await webAssurance.searchTimeoutCheck()
 
     })

@@ -6,6 +6,7 @@ describe('WebMD Health A-Z Filter', () => {
 
     before(async () => {
         await navTools.openLetterFilter();
+        await navTools.disableAnimations();
     }) 
    
         for (let letter of 'bcdefghijklmnopqrstuvwxyza') {
