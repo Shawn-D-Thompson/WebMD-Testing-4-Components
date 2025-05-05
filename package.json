@@ -7,7 +7,7 @@
         "@wdio/spec-reporter": "^9.12.6"
     },
     "scripts": {
-        "wdio": "wdio run wdio.conf.js"
+        "wdio": "wdio run ./wdio.conf.js"
     },
     "dependencies": {
         "chromedriver": "^135.0.4",
