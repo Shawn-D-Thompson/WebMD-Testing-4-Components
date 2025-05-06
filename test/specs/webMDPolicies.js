@@ -24,8 +24,6 @@ describe('Checking that the "Policies" links function properly', () => {
 
             const currentUrl = await browser.getUrl();
             console.log(`Navigated to: ${currentUrl}`);
-
-            // Optionally validate the URL here
         });
     }
 

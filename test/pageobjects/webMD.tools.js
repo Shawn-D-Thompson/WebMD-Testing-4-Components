@@ -2,20 +2,6 @@ import { $ } from '@wdio/globals'
 import Pages from './webMD.page.js';
 
 class navTools extends Pages {
-
-    async disableAnimations() {
-        await browser.execute(() => {
-            const css = `
-                * {
-                    transition: none !important;
-                    animation: none !important;
-                }
-            `;
-            const style = document.createElement('style');
-            style.innerHTML = css;
-            document.head.appendChild(style);
-        });
-    }
     
 
 
@@ -28,7 +14,7 @@ class navTools extends Pages {
     
     //selectors for the "Search Bar" testing
     get searchSelect () {
-        return $('.vn-menu-btn.vn-search.vn-dt');
+        return $('.vn-mt.vn-menu-btn.vn-search');
     }
     get searchBarSelect () {
         return $('.webmd-input__inner');
@@ -57,8 +43,11 @@ class navTools extends Pages {
     get textSelect () {
         return $('.imprint-search');
     }
+    get textSide1Select() {
+        return $('input[name="imprintSideOne"]');
+    }
     get textSide2Select () {
-        return $('input[name="imprintSideTwo"]')
+        return $('input[name="imprintSideTwo"]');
     }
     get pillSubmit () {
         return $("//button[contains(normalize-space(), 'Result')]");
@@ -109,10 +98,10 @@ class navTools extends Pages {
         async openPillIdentifier() {
             return super.main('pill-identification/default.htm');
         }
-        async selectColor () {
+        async selectColorMenu () {
             await this.colorSelect.click()
         }
-        async selectShape () {
+        async selectShapeMenu () {
             await this.shapeSelect.click()
         }
         async selectSubmit () {
@@ -132,52 +121,63 @@ class navTools extends Pages {
             return text.trim().length > 0;
         }
 
-        // async enterPillText(text1, text2 = '') {
-        //     await this.textSelect.waitForDisplayed({ timeout: 5000 });
-        //     await this.textSelect.waitForClickable({ timeout: 5000 });
-        //     await this.textSelect.click();
-        //     await this.textSelect.setValue(text1);
-        //     await this.textSide2Select.waitForDisplayed({ timeout: 5000 });
-        //     await this.textSide2Select.waitForClickable({ timeout: 5000 });
-        //     await this.textSide2Select.click();
-        //     await this.textSide2Select.setValue(text2);
-        //     await browser.keys('Enter');
-        //   }
+        // In navTools.js
+        async waitForSearchResults() {
+            await browser.waitUntil(async () => {
+                const results = await $('div.search-results-container');
+                return await results.isDisplayed();
+            }, {timeout: 10000});
+}
 
-        // async enterPillText(text) {
-        //     await this.textSelect.click();
-        //     await browser.execute(el => el.value = '', input);
-        //     await this.textSelect.setValue(text);
-        //     await browser.keys('Enter');
-        //   }
 
-        async enterPillText(text) {
-            const input = this.textSelect; // define the input element
+
+        async enterPillText(text1, text2 = '') {
+            // SIDE 1 INPUT
+            await this.textSelect.waitForDisplayed({ timeout: 5000 });
+            await this.textSelect.waitForClickable({ timeout: 5000 });
+            await this.textSelect.click();
+            await this.textSide1Select.setValue(text1);
         
-            await input.waitForDisplayed({ timeout: 5000 });
-            await input.waitForEnabled({ timeout: 5000 });
+            // Wait for first dropdown to become visable
+            const side1Dropdown = await $('#webmd-typeahead');
+            await side1Dropdown.waitForDisplayed({ timeout: 5000 });
         
-            await input.click();
-            await browser.execute(el => el.value = '', input); // clear using JS
-            await input.setValue(text);
-            await browser.keys('Enter');
+            const side1Suggestions = await side1Dropdown.$$('li');
+            if (side1Suggestions.length > 0) {
+                await side1Suggestions[0].waitForClickable();
+                await side1Suggestions[0].click();
+            }
+        
+            // SIDE 2 INPUT
+            if (text2 !== '') {
+                await this.textSide2Select.waitForDisplayed();
+                await this.textSide2Select.waitForClickable();
+                await this.textSide2Select.click();
+                await this.textSide2Select.setValue(text2);
+        
+                // Wait for second dropdown to become visible
+                const dropdowns = await $$('ul#webmd-typeahead');
+                const side2Dropdown = dropdowns.length > 1 ? dropdowns[1] : dropdowns[0]; // fallback just in case
+        
+                await side2Dropdown.waitForDisplayed({ timeout: 5000 });
+        
+                const side2Suggestions = await side2Dropdown.$$('li');
+                if (side2Suggestions.length > 0) {
+                    await side2Suggestions[0].waitForClickable({ timeout: 5000 });
+                    await side2Suggestions[0].click();
+                }
+            }
         }
+        
+        
         
 
         async selectDropdownOption(Text) {
             const option = $(`//li[contains(., "${Text}")]`);
             await option.waitForDisplayed({ timeout: 5000 });
             await option.waitForClickable({ timeout: 5000 });
-            //await browser.waitUntil(async () => await option.isDisplayed(), { timeout: 5000 });
+            await browser.waitUntil(async () => await option.isDisplayed(), { timeout: 5000 });
             await option.click();
-
-            // const isVisible = await option.isDisplayed();
-            //     if (!isVisible) {
-            //         throw new Error(`Option "${Text}" is not visible`);
-            //     }
-
-            //     await option.click();
-            //     console.log(`Clicked on: ${Text}`);
         }
           
           

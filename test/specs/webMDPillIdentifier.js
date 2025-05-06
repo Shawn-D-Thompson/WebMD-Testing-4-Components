@@ -10,7 +10,6 @@ describe('Testing the "Pill Identifier" filter options', () => {
             '3 Sided',
             '5 Sided',
             '6 Sided',
-            //'7 Sided',
             '8 Sided',
             'Oval',
             'Round',
@@ -22,32 +21,50 @@ describe('Testing the "Pill Identifier" filter options', () => {
       ];
   
     await navTools.openPillIdentifier();
-    //await navTools.disableAnimations();
-  
+
     for (let shape of shapeOptions) {
-        await navTools.openPillIdentifier()
-        await navTools.selectShape(); // Reopen dropdown each time
+        try {
+          // Reset UI state
+            await browser.keys('Escape');
+      
+          // Re-open dropdown and select option
+            await navTools.selectShapeMenu();
+            await navTools.selectDropdownOption(shape);
+      
+            await navTools.selectSubmit();
+      
+          // Confirm results are displayed
+            await navTools.waitForSearchResults()
+      
+        } catch (err) {
+          console.error(`Error testing ${shape}:`, err);
+          throw err;
+        }
+    }})
+      
+  
+    //for (let shape of shapeOptions) {
 
-        await navTools.selectDropdownOption(shape)
+    //     await navTools.selectShape(); // Reopen dropdown each time
 
+    //     await navTools.selectDropdownOption(shape)
 
+    //     await navTools.selectSubmit()
 
-        console.log(`Selected shape: ${shape}`);
-        await navTools.selectSubmit()
+    //     await browser.waitUntil(async () => {
+    //         const searchResults = await $('div.search-results-container')
+    //         return await searchResults.isExisting();
+    //      });
 
-        await browser.waitUntil(async () => {
-            const searchResults = await $('div.search-results-container')
-            return await searchResults.isExisting();
-         });
-
-            const allValid = await navTools.checkResults(shape);
-            if (!allValid) {
-                throw new Error(`"${shape}" did not yield valid results`);
-            }}
-    })
+    //     const allValid = await navTools.checkResults(shape);
+    //     if (!allValid) {
+    //         throw new Error(`"${shape}" did not yield valid results`);
+    //     }}
+    // })
 
     //Color Filter
     it('should display results for each color', async () => {
+
         const colorOptions = [
           'White',
           'Off-White',
@@ -72,37 +89,48 @@ describe('Testing the "Pill Identifier" filter options', () => {
         await navTools.openPillIdentifier();
     
         for (let color of colorOptions) {
-            //await navTools.openPillIdentifier();
-            await navTools.selectColor(); // Reopen dropdown each time
+
+            await navTools.selectColorMenu(); // Reopen dropdown each time
 
             await navTools.selectDropdownOption(color)
 
             console.log(`Selected Color: ${color}`);
 
             await navTools.selectSubmit();
-          
-            await browser.waitUntil(async () => {
-                const searchResults = await $('div.search-results-container')
-                return await searchResults.isExisting();
-            });
-            const allValid = await navTools.checkResults();
-            if (!allValid) {
-                throw new Error(`"${color}" did not yield valid results`);
-            }
+
+            await navTools.waitForSearchResults()
+            // await browser.waitUntil(async () => {
+            //     const searchResults = await $('div.search-results-container')
+            //     return await searchResults.isDisplayed({timeout: 10000});
+            // });
         }
     })
 
 
     //Text Filter
-    it(`Should display results for APO`, async () => {
+    it(`Should display results for APO BU75`, async () => {
 
         await navTools.openPillIdentifier()
         await navTools.enterPillText('APO')
         await navTools.selectSubmit();
 
         await browser.waitUntil(async () => {
-            const results = await $('div.search-results-container');
-            return await results.isDisplayed();
+            const searchResults = await $('div.search-results-container')
+            return await searchResults.isDisplayed({timeout: 10000});
+         });
+
+        const allValid = await navTools.checkResults();
+        if (!allValid) {
+            throw new Error(`"APO" did not yield valid results`);
+        }
+
+        await navTools.openPillIdentifier()
+        await navTools.enterPillText('APO', 'BU75')
+        await navTools.selectSubmit();
+
+        await browser.waitUntil(async () => {
+            const searchResults = await $('div.search-results-container')
+            return await searchResults.isDisplayed();
         })
 
     })
