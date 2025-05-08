@@ -1,32 +1,25 @@
 import { $ } from '@wdio/globals'
-import Pages from './webMD.page.js';
+import keys from './webMD.globals.js';
 
-
-class webAssurance extends Pages {
+class searchTools extends keys {
     
-
-
-
-//LetterFilter
-    get detectLetterResults () {
-        return $$('ul[class="link-list"]')
+    //selectors for the "Search Bar" testing
+    get searchSelect () {
+        return $('.vn-mt.vn-menu-btn.vn-search');
+    }
+    get searchBarSelect () {
+        return $('.webmd-input__inner');
+    }
+    get searchSubmit () {
+        return $('button[type="submit"]');
     }
 
-    async letterTimoutCheck () {
-        const results = await $$('ul.link-list li a');
-        await browser.waitUntil(() => results.length > 0, {
-            timeout: 3000,
-            timeoutMsg: 'expected results to appear after 3s',
-        });
-        for (let item of results) {
-            const text = await item.getText();
-            if (text.length > 0) {
-                expect(text[0].toLowerCase()).toBe(letter);
-            }
-        }
+    //Functions for the "Search Bar" tests
+    async searchSelectAndInput (text) {
+        await this.searchSelect.click()
+        await this.searchBarSelect.setValue(text);
+        await this.searchSubmit.click()
     }
-    
-//Search Test
     async searchTimeoutCheck () {
         const result = $('div.search-results-internal-container');
         await browser.waitUntil(async () => {
@@ -38,7 +31,6 @@ class webAssurance extends Pages {
             timeoutMsg: 'Expected results to appear after 5s',
         });
     }
-
     async checkSearchError() {
 
         const errorElement = $('div.noRes-container');
@@ -47,6 +39,8 @@ class webAssurance extends Pages {
         await errorElement.waitForDisplayed();
         expect(errorText).toHaveText(expectedErrorText);
     }
+
 }
 
-export default new webAssurance();
+
+export default new searchTools();
